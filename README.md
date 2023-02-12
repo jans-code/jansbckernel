@@ -10,7 +10,7 @@ So far assigning variables or changing bc's settings is not supported.
 
 ## Installation
 
-- install bc from you distro's package manager
+- install bc from your distro's package manager
 - `pip install` jupyterlab and pexpect
 - download/clone this project
 - open shell in project folder
