@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from ipykernel.kernelbase import Kernel
 import pexpect
+import time
 
 class jansbckernel(Kernel):
     implementation = 'IPython'
@@ -22,6 +23,7 @@ class jansbckernel(Kernel):
             else:
                 bc_kernel = pexpect.spawn('bc -q -l')
                 bc_kernel.sendline(code)
+                time.sleep(0.1)
                 bc_kernel.expect('\r\n')
                 solution = bc_kernel.buffer.decode('ascii')
                 if "\r" in solution:
