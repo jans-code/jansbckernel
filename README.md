@@ -11,7 +11,7 @@ This is a work in progress so do not expect too much stability.
 There are also limitations in this kernel when numbers get big and
 bc will not return with a result in time.
 
-## Installation
+## Dev Installation
 
 - install bc from your distro's package manager
 - `pip install` jupyterlab and pexpect
