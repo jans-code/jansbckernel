@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from ipykernel.kernelbase import Kernel
-import pexpect
-import time
+import pexpect, os, shutil
 
 class jansbckernel(Kernel):
     implementation = 'IPython'
@@ -18,30 +17,21 @@ class jansbckernel(Kernel):
     def do_execute(self, code, silent, store_history=True, user_expressions=None,
                    allow_stdin=False):
         if not silent:            
-            if "quit" in code:
-                solution = "(standard_in) 99: quit not allowed in bc kernel"
+            if "read" in code:
+                solution = "read is not allowed in bc kernel."
             else:
-                bc_kernel = pexpect.spawn('bc -q -l')
-                bc_kernel.sendline(code)
-                time.sleep(0.1)
-                bc_kernel.expect('\r\n')
-                solution = bc_kernel.buffer.decode('ascii')
-                if "\r" in solution:
-                    solution = solution.split("\r")
-                    solution = solution[-2]
-                solution = solution.strip()
-                if "." in solution:
-                    if solution[0] == ".":
-                        solution = "0" + solution
-                    while solution[-1] == "0":
-                        solution = solution[:-1]
-                bc_kernel.close()
+                workingdir = "/tmp/bckernel/"
+                os.mkdir(workingdir)
+                with open(workingdir + "calculation.txt", "w") as f:
+                        f.write(code + "\nquit")
+                solution = pexpect.run('bc -ql ' + workingdir + 'calculation.txt').decode('ascii')
+                solution = solution.replace("\\", "")
+                shutil.rmtree(workingdir)
             stream_content = {'name': 'stdout', 'text': solution}
             self.send_response(self.iopub_socket, 'stream', stream_content)
             
 
         return {'status': 'ok',
-                # The base class increments the execution count
                 'execution_count': self.execution_count,
                 'payload': [],
                 'user_expressions': {},
