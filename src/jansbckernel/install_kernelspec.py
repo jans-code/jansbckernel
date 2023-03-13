@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 import os, shutil
 from jupyter_client.kernelspec import KernelSpecManager
 json ="""{"argv":["python","-m","jansbckernel", "-f", "{connection_file}"],
