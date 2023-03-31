@@ -1,11 +1,18 @@
-#!/usr/bin/env python
-import os, shutil
+#!/usr/bin/env python3
+# *_* coding: utf-8 *_*
+
+"""kernelspec install helper"""
+
+import os
+import shutil
+
 from jupyter_client.kernelspec import KernelSpecManager
-json ="""{"argv":["python","-m","jansbckernel", "-f", "{connection_file}"],
+
+JSON ="""{"argv":["python","-m","jansbckernel", "-f", "{connection_file}"],
  "display_name":"bc"
 }"""
 
-svg = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+SVG = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
@@ -147,26 +154,27 @@ svg = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 """
 
 def install_kernelspec():
+    """create tmp dir and files and installs kernel"""
     kerneldir = "/tmp/jansbckernel/"
     print('Creating tmp files...', end="")
     os.mkdir(kerneldir)
 
-    with open(kerneldir + "kernel.json", "w") as f:
-        f.write(json)
+    with open(kerneldir + "kernel.json", "w", encoding="UTF-8") as file:
+        file.write(JSON)
 
-    with open(kerneldir + "logo-svg.svg", "w") as f:
-        f.write(svg)
-        
+    with open(kerneldir + "logo-svg.svg", "w", encoding="UTF-8") as file:
+        file.write(SVG)
+
     print(' Done!')
     print('Installing Jupyter kernel...', end="")
-    
+
     ksm = KernelSpecManager()
     ksm.install_kernel_spec(kerneldir, 'jansbckernel', user=os.getenv('USER'))
-    
+
     print(' Done!')
     print('Cleaning up tmp files...', end="")
-    
+
     shutil.rmtree(kerneldir)
-    
+
     print(' Done!')
     print('For uninstall use: jupyter kernelspec uninstall jansbckernel')
