@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # *_* coding: utf-8 *_*
 
 """bc kernel class module"""
