@@ -8,6 +8,8 @@ import shutil
 import pexpect
 from ipykernel.kernelbase import Kernel
 
+workingdir = "/tmp/bckernel/"
+
 class jansbckernel(Kernel):
     """bc kernel uses ipykernel to run bc"""
     implementation = 'IPython'
@@ -27,19 +29,22 @@ class jansbckernel(Kernel):
             if "read" in code:
                 solution = "read is not allowed in bc kernel."
             else:
-                workingdir = "/tmp/bckernel/"
+                if os.path.exists(workingdir):
+                    shutil.rmtree(workingdir)
                 os.mkdir(workingdir)
                 with open(workingdir + "calculation.txt", "w", encoding="UTF-8") as file:
                     file.write(code + "\nquit")
                 solution = pexpect.run('bc -ql ' + workingdir + 'calculation.txt').decode('ascii')
                 solution = solution.replace("\\", "")
-                shutil.rmtree(workingdir)
             stream_content = {'name': 'stdout', 'text': solution}
             self.send_response(self.iopub_socket, 'stream', stream_content)
-
 
         return {'status': 'ok',
                 'execution_count': self.execution_count,
                 'payload': [],
                 'user_expressions': {},
                }
+
+    def do_shutdown(self, restart):
+        if os.path.exists(workingdir):
+            shutil.rmtree(workingdir)

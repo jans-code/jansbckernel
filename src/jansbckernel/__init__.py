@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # *_* coding: utf-8 *_*
 
-"""bc kernel init"""
+"""Init module"""
 
-__version__ = "0.1.4"
+from importlib.metadata import version
+__version__ = version(__package__)
+
+
