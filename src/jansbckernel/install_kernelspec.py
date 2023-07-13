@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # *_* coding: utf-8 *_*
 
-"""kernelspec install helper"""
+"""Kernel installer"""
 
 import os
 import shutil
-
 from jupyter_client.kernelspec import KernelSpecManager
 
 JSON ="""{"argv":["python","-m","jansbckernel", "-f", "{connection_file}"],
