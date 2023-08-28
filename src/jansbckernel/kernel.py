@@ -8,6 +8,8 @@ import shutil
 import pexpect
 from ipykernel.kernelbase import Kernel
 
+version = pexpect.run('bc -v').decode('utf-8').split("\n")[0]
+
 workingdir = "/tmp/bckernel/"
 
 class jansbckernel(Kernel):
@@ -15,13 +17,14 @@ class jansbckernel(Kernel):
     implementation = 'IPython'
     implementation_version = '8.12.0'
     language = 'bc'
-    language_version = '1.07.1'
+    language_version = version.split(" ")[1]
     language_info = {
         'name': 'GNU bc',
         'mimetype': 'text/plain',
         'file_extension': '.txt',
     }
-    banner = "bc is ready to crunch some numbers..."
+    
+    banner = version
 
     def do_execute(self, code, silent, store_history=True, user_expressions=None,
                    allow_stdin=False):
