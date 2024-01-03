@@ -5,17 +5,17 @@
 
 import os
 import shutil
-import pexpect
+import subprocess
 from ipykernel.kernelbase import Kernel
 
-version = pexpect.run('bc -v').decode('utf-8').split("\n")[0]
+version = subprocess.run('bc -v', shell= True, capture_output=True).stdout.decode('utf-8').split('\n')[0]
 
 workingdir = "/tmp/bckernel/"
 
 class jansbckernel(Kernel):
     """bc kernel uses ipykernel to run bc"""
     implementation = 'IPython'
-    implementation_version = '8.12.0'
+    implementation_version = '8.19.0'
     language = 'bc'
     language_version = version.split(" ")[1]
     language_info = {
@@ -23,7 +23,7 @@ class jansbckernel(Kernel):
         'mimetype': 'text/plain',
         'file_extension': '.txt',
     }
-    
+
     banner = version
 
     def do_execute(self, code, silent, store_history=True, user_expressions=None,
@@ -35,10 +35,10 @@ class jansbckernel(Kernel):
                 if os.path.exists(workingdir):
                     shutil.rmtree(workingdir)
                 os.mkdir(workingdir)
-                with open(workingdir + "calculation.txt", "w", encoding="UTF-8") as file:
-                    file.write(code + "\nquit")
-                solution = pexpect.run('bc -ql ' + workingdir + 'calculation.txt').decode('ascii')
-                solution = solution.replace("\\", "")
+                with open(workingdir + 'calculation.txt', 'w', encoding='utf-8') as file:
+                    file.write(code + '\nquit')
+                solution = subprocess.run('bc -ql ' + workingdir + 'calculation.txt', shell=True, capture_output=True).stdout.decode('utf-8')
+                solution = solution.replace('\\', '')
             stream_content = {'name': 'stdout', 'text': solution}
             self.send_response(self.iopub_socket, 'stream', stream_content)
 
